@@ -1,42 +1,44 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { nanoid } from "nanoid";
 import PropTypes from "prop-types";
 import css from "./contactForm.module.css";
 
+const ContactForm = ({ onSubmit }) => {
+    const [contacts, setContacts] = useState({
+        name: "",
+        number: "",
+});
 
-export class ContactForm extends Component {
-    state = { name: "", number: "" };
-    nameId = nanoid();
-    numberId = nanoid();
+    const nameId = nanoid();
+    const numberId = nanoid(); 
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const { name, number } = this.state;
-
+        
+        const { name, number } = contacts;
         if (!name || !number) {
             alert("Some field is empty");
             return;
         }
 
-        this.props.onSubmit(name, number);
-        this.reset();
-        };
+        onSubmit(name, number);
+        reset();
+    };
 
-        reset = () => {
-            this.setState({ name: "", number: "" });
-        };
+    const reset = () => {
+        setContacts({ name: "", number: "" });
+    };
 
-        handleChange = (e) => {
-            const { name, value } = e.currentTarget;
-            this.setState({ [name]: value });
-        };
+    const handleChange = (e) => {
+        const { name, value } = e.currentTarget;
+        setContacts((prevContacts) => ({ ...prevContacts, [name]: value }));
+    };
 
+    const { name, number } = contacts;
 
-    render() {
-        const { name, number } = this.state;
-        return (
-            <form className={css.form} onSubmit={this.handleSubmit}>
-                <label htmlFor={this.nameId}>Name
+    return (
+            <form className={css.form} onSubmit={handleSubmit}>
+                <label htmlFor={nameId}>Name
                 <input
                     className={css.input}
                     type="text"
@@ -45,11 +47,11 @@ export class ContactForm extends Component {
                     pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s[A-Za-zÀ-ÖØ-öø-ÿ]+)?"
                     title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
                     required
-                    onChange={this.handleChange}
-                    id={this.nameId}
+                    onChange={handleChange}
+                    id={nameId}
                     placeholder="Adrian Smith"
                 /></label>
-                <label htmlFor={this.numberId}>Number
+                <label htmlFor={numberId}>Number
                 <input
                     className={css.input}
                     name="number"
@@ -57,8 +59,8 @@ export class ContactForm extends Component {
                     type="tel"
                     title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                     required
-                    onChange={this.handleChange}
-                    id={this.numberId}
+                    onChange={handleChange}
+                    id={numberId}
                     placeholder="+48 123-456-789"
                 /></label><div className={css.divider}>
                 <button className={css.button} type="submit">
@@ -67,8 +69,9 @@ export class ContactForm extends Component {
             </form>
         );
     };
-};
 
 ContactForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
 };
+
+export default ContactForm;
