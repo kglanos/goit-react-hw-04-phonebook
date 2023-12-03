@@ -39,10 +39,6 @@ const App = () => {
         );
       };
 
-    useEffect(() => {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }, [contacts]);
-
       const onFilterChange = (e) => {
         setFilter(e.currentTarget.value);
       };
